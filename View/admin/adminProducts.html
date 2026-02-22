@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>shop App</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="/css/shop.css"/>
+</head>
+<body>
+    <div class="container-fluid p-0 m-0">
+  
+        <nav class="navbar navbar-dark bg-dark px-3 w-100 d-flex align-items-center">
+  
+            
+            <a class="navbar-brand fw-bold fs-4 text-white me-4" href="#">
+                Shopping App
+            </a>
+          
+           
+            <div class="d-flex align-items-center gap-2 flex-wrap">
+          
+              <button id="ProductsBtn" class="btn btn-primary" onclick="products()">Products</button>
+              <button id="addProductBtn" class="btn btn-success">Add Product</button>
+             
+              <button id="OrdersBtn" class="btn btn-info" onclick="orders()">Orders</button>
+              <button id="chatBtn" class="btn btn-secondary" onclick="openChat()">
+                Chat with Customers
+              </button>
+             
+            </div>
+          
+          
+            <div class="ms-auto d-flex align-items-center gap-3 text-white">
+          
+              <button class="btn btn-outline-light btn-sm">
+                Admin
+                </button>
+              <button class="btn btn-info btn-sm" onclick="logout()">
+                Log Out
+              </button>
+          
+            </div>
+          </nav>
+      
+   </div>
+
+   
+  <div id="productSection" style="display: none;">
+    
+    <div id="productList" class="d-flex flex-wrap gap-3 p-4">
+    
+    </div>
+ </div>
+
+
+
+     
+<div id="ordersSection" style="display: none; padding: 20px;">
+   
+   <div id="orderList" class="d-flex flex-column gap-3">
+    
+   </div>
+
+  </div>
+
+
+  <div id="chatSection" class="container mt-4" style="display: none;">
+    <div class="room-container d-flex flex-column ">
+      
+      <ul id="chatListUI" class="list-group room-list mt-3"></ul>
+    </div>
+
+
+
+  <div id="chatSec" class="chat-container" style="display: none;">
+
+    <div class="bg-dark text-white p-2 d-flex align-items-center gap-3">
+      <i class="bi bi-people fs-4"></i>
+      <strong id="pName">Email</strong>
+      <button class="btn btn-sm btn-dark ms-auto" onclick="closeChat()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+    <div id="chatBody" class="chat-body bg-transparent d-flex flex-column">
+     
+    </div>
+   
+   
+    <div class="chat-footer p-2 border-top d-flex align-items-center gap-2">
+      
+      <label for="mediaInput" class="btn btn-light rounded-circle">
+        <i class="bi bi-paperclip"></i>
+      </label>
+    
+   
+      <input 
+        type="file"
+        id="mediaInput"
+        hidden
+        accept="image/*,video/*,.pdf,.doc,.docx"
+        onchange="sendMedia()"
+      />
+    
+     
+      <input 
+        id="messageInput"
+        type="text"
+        class="form-control"
+        placeholder="Message"
+      />
+    
+      <button id="sendBtn" class="btn btn-dark px-3">
+        Send
+      </button>
+    
+    </div>
+    </div>
+
+  </div>
+    
+</body>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+<script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+<script src="/js/adminProducts.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</html>
