@@ -20,7 +20,11 @@ const STORE_LOCATION = {
 function logout(){
     localStorage.removeItem("adminEmail");
     localStorage.removeItem("token");
-    window.location.href = "/admin/admin.html";
+    localStorage.removeItem("roomName");
+    localStorage.removeItem("chatWith");
+    axios.post("/admin/logout", {}, { withCredentials: true })
+  .then(() => window.location.href = "/admin");
+
 }
 
 window.onload = function() {

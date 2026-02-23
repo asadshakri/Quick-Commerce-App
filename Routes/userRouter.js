@@ -14,5 +14,14 @@ router.post("/checkout", middleware.authenticate, userController.checkout);
 router.get("/getOrders", middleware.authenticate, userController.getOrders);
 router.get("/receipt/:orderId", middleware.authenticate, userController.getReceipt);
 
+router.patch("/updateProfile",middleware.authenticate,userController.updateProfile);
+router.get("/profile",middleware.authenticate,userController.getProfile);
+router.delete("/deleteUser",middleware.authenticate,userController.deleteUser);
+router.patch("/changePassword",middleware.authenticate,userController.changePassword);
+router.get("/shop",middleware.authenticate,userController.shop);
+router.post("/logout", (req, res) => {
+    res.clearCookie("token");
+    res.json({ message: "Logged out" });
+  });
 
 module.exports=router;

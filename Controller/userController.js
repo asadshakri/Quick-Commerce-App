@@ -3,12 +3,17 @@ const bcrypt=require("bcrypt");
 const jwt=require("jsonwebtoken");
 const Product=require("../models/product");
 const Order=require("../models/order");
-
+const path=require("path");
 const addUser=async (req, res) => {
     try{
-        const { name, email, password } = req.body;
-        if (!name || !email || !password) {
-            return res.status(400).json({ message: "Name, email, and password are required" });
+        const { name, email, password, phone , address } = req.body;
+        if (!name || !email || !password || !phone || !address) {
+            return res.status(400).json({ message: "Details are required" });
+        }
+
+        const user=await User.findOne({ email: email })
+        if (user) {
+            return res.status(400).json({ message: "User with this email already exists" });
         }
         
         bcrypt.hash(password, 10, async (err, hash) => {
@@ -19,6 +24,8 @@ const addUser=async (req, res) => {
             const newUser = new User({
                 name: name,
                 email: email,
+                    phone: phone,
+                    address: address,
                 password: hash,
                 cart: { items: [] }
             });
@@ -52,7 +59,15 @@ const loginUser=async(req,res)=>{
             if(result)
             {
                 const token=jwt.sign({userId:dbUser._id},`${process.env.TOKEN}`,{expiresIn:"1h"});
-                return res.status(200).json({message:"login successfull",token});
+                res.cookie("token", token, {
+                    httpOnly: true,
+                    sameSite: "lax",
+                    maxAge: 60 * 60 * 1000
+                  }).status(200).json({
+                      message: "User login successful",
+                      token: token,
+                      email: email,
+                    });
             }
             else
             {
@@ -65,6 +80,87 @@ const loginUser=async(req,res)=>{
         return res.status(500).json({message:err.message});
     }
 }
+
+
+const getProfile=async(req,res)=>{
+    try{
+        const userId=req.user._id;
+        const userDetails=await User.findById(userId);
+        res.status(200).json({name:userDetails.name,email:userDetails.email,phone:userDetails.phone,address:userDetails.address});
+    }
+    catch(err)
+    {
+        res.status(500).json({message:err.message});
+    }
+  }
+
+
+  const deleteUser=async(req,res)=>{
+    try{
+        const userId=req.user._id;
+        res.clearCookie("token");
+        await User.findByIdAndDelete(userId);
+        res.status(200).json({message:"User deleted successfully"});
+    }
+    catch(err)
+    {
+        res.status(500).json({message:err.message});
+    }
+  }
+
+  const shop=(req,res)=>{
+     res.sendFile(path.join(__dirname,"../View/shop/shop.html"));
+    }
+
+
+
+  const changePassword=async(req,res)=>{
+    try{
+        const {oldPassword,newPassword}=req.body;
+        const userId=req.user._id;
+        const userDetails=await User.findById(userId);
+        bcrypt.compare(oldPassword, userDetails.password, (err, result) => {
+            if (err) {
+              throw new Error("Something went wrong");
+            }
+            if (result == true) {
+                const saltrounds = 10;
+                bcrypt.hash(newPassword, saltrounds, async (err, hash) => {
+                    if (err) console.log(err);
+              
+                    await User.updateOne({ _id: userId }, {$set: { password: hash }});
+                    console.log("Password successfully changed");
+                    res.status(200).json({ message: "Password changed successfully" });
+                  });
+              
+              return;
+            } else {
+              res
+                .status(401)
+                .json({ message: "Old Password incorrect" });
+              return;
+            }
+          });
+    }
+    catch(err)
+    {
+        res.status(500).json({message:err.message});
+    }
+  }
+
+
+  const updateProfile=async(req,res)=>{
+    try{
+        const {name,email,phone,address}=req.body;
+        const userId=req.user._id;
+        await User.updateOne({_id:userId},{$set:{name:name,email:email,phone:phone,address:address}});
+        res.status(200).json({message:"Profile updated successfully"});
+    }
+    catch(err)
+    {
+        res.status(500).json({message:err.message});
+    }
+  }
 
 
 const getProducts=async(req,res)=>{
@@ -137,6 +233,7 @@ const checkout=async(req,res)=>{
         {
             return res.status(400).json({message:"Location data is required for checkout"});
         }
+
 
        const usersDetails=await req.user.populate("cart.items.productId")
          const cartProducts= usersDetails.cart.items.map(item=>{
@@ -230,4 +327,18 @@ catch(err)
 
 
 
-module.exports={addUser,loginUser,getProducts,addToCart,getCart,deleteFromCart,checkout,getOrders,getReceipt};
+module.exports={addUser,
+    loginUser,
+    getProducts,
+    addToCart,
+    getCart,
+    deleteFromCart,
+    checkout,
+    getOrders,
+    getReceipt,
+    getProfile,
+    deleteUser,
+    changePassword,
+    updateProfile,
+    shop
+};

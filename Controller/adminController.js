@@ -4,7 +4,7 @@ const jwt=require("jsonwebtoken");
 const Product=require("../models/product");
 const User=require("../models/user");
 const Order=require("../models/order");
-
+const path=require("path");
 
 const loginAdmin = async (req, res) => {
     try {
@@ -19,11 +19,15 @@ const loginAdmin = async (req, res) => {
           throw new Error("Something went wrong");
         }
         if (result == true) {
-          res
-            .status(200)
-            .json({
+          const token = jwt.sign({ userId: process.env.ADMIN_ID }, process.env.TOKEN, { expiresIn: "1h" });
+
+          res.cookie("token", token, {
+            httpOnly: true,
+            sameSite: "lax",
+            maxAge: 60 * 60 * 1000
+          }).status(200).json({
               message: "Admin login successful",
-              token: jwt.sign( {userId:process.env.ADMIN_ID} , process.env.TOKEN, { expiresIn: "1h" }),
+              token: token,
               email: email,
             });
           return;
@@ -38,6 +42,11 @@ const loginAdmin = async (req, res) => {
       res.status(500).json({ message: err.message });
     }
   };
+
+const productPage=(req,res)=>{
+
+     res.sendFile(path.join(__dirname,"../View/admin/adminProducts.html"));
+}
 
 
   const addProduct=async(req,res)=>{
@@ -105,6 +114,14 @@ const deleteProduct=async(req,res)=>{
   try{
     const productId=req.params.productId;
     await Product.findByIdAndDelete(productId);
+
+    const userCart=await User.find({ "cart.items.productId": productId });
+    for(const user of userCart)
+    {
+      user.cart.items=user.cart.items.filter(item=>item.productId.toString()!==productId);
+      await user.save();
+    }
+
     return res.status(200).json({message:"Product deleted successfully"});
   }
   catch(err)
@@ -142,30 +159,6 @@ const getOrder=async(req,res)=>{
   }
 }
 
-/*const updateLocation = async (req, res) => {
-  try {
-    const { lat, lng } = req.body;
-    const { orderId } = req.params;
 
-    const order = await Order.findById(orderId);
-    if (!order) {
-      return res.status(404).json({ message: "Order not found" });
-    }
 
-    order.currentLocation = { lat, lng };
-    order.status = "OUT_FOR_DELIVERY";
-    await order.save();
-
-    const io = req.io;
-    io.to(orderId).emit("locationUpdate", {
-      lat,
-      lng
-    });
-
-    return res.status(200).json({ message: "Location updated" });
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-};*/
-
-module.exports = { loginAdmin,addProduct ,getProduct,editProduct,deleteProduct,getAllOrders,getOrder};
+module.exports = { loginAdmin,addProduct ,getProduct,editProduct,deleteProduct,getAllOrders,getOrder,productPage};

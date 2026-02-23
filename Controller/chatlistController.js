@@ -4,7 +4,7 @@ const users = require("../models/user");
 const getChatList = async (req, res) => {
   
     try{
-    const myUserId = req.user.id;
+    //const myUserId = req.user.id;
     const myEmail = req.user.email;
 
 

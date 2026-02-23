@@ -59,15 +59,86 @@ window.addEventListener('DOMContentLoaded',()=>{
  
 });
 
- function showProfile(){
-   document.getElementById("profile").innerText=localStorage.getItem("email");
+async function showProfile(){
+  const profileSection = document.getElementById('profileSection');
+  profileSection.style.display = 'flex';
+ document.getElementById("cartSection").style.display="none";
+  document.getElementById("productSection").style.display="none";
+  document.getElementById("ordersSection").style.display="none";
+  document.getElementById("mapSection").style.display="none";
+  document.getElementById("chatSection").style.display="none";
+ 
+  const token = localStorage.getItem('token');
+  const resultDetails= await axios.get(`${backend_url}/user/profile`,{ headers:{"authorization":token}});
+  document.getElementById('name').value=resultDetails.data.name;
+  document.getElementById('email').value=resultDetails.data.email;
+  document.getElementById('phone').value=resultDetails.data.phone;
+  document.getElementById('address').value=resultDetails.data.address;
+
+  document.getElementById("profileForm").addEventListener("submit",(event)=>{
+      event.preventDefault();
+      const name=event.target.name.value;
+      const phone=event.target.phone.value;
+      const email=event.target.email.value;
+      const address=event.target.address.value;
+      const updatedDetails={name,email,phone,address};
+      const token = localStorage.getItem('token');
+      axios.patch(`${backend_url}/user/updateProfile`,updatedDetails,{ headers:{"authorization":token}}).then((response)=>{
+          alert(response.data.message);
+  
+      }).catch((error)=>{
+          console.log(error);
+      })
+  });
+
+  document.getElementById("changePasswordBtn").addEventListener("click",()=>{
+      document.getElementById("updateProfile").style.display='none';
+      document.getElementById("changePasswordSection").style.display='block';
+     document.getElementById("changePasswordForm").addEventListener("submit",(event)=>{
+      event.preventDefault();
+      const oldPassword=event.target.currentPassword.value;
+      const newPassword=event.target.newPassword.value;
+      const passwordDetails={oldPassword,newPassword};
+      const token = localStorage.getItem('token');
+      axios.patch(`${backend_url}/user/changePassword`,passwordDetails,{ headers:{"authorization":token}}).then((response)=>{
+          alert(response.data.message);
+          document.getElementById("changePasswordSection").style.display='none';
+          document.getElementById("updateProfile").style.display='block';
+  
+      }).catch((error)=>{
+          alert(error.response.data.message);
+          console.log(error);
+      })
+     });
+  });
+
+ document.getElementById("deleteUserBtn").addEventListener("click",()=>{
+  const confirmation=confirm("Are you sure you want to delete your account? This action cannot be undone.");
+  if(confirmation){
+      const token = localStorage.getItem('token');
+      axios.delete(`${backend_url}/user/deleteUser`,{ headers:{"authorization":token}},{withCredentials:true}).then((response)=>{
+          alert(response.data.message);
+          localStorage.removeItem("token");
+          localStorage.removeItem("email");
+          localStorage.removeItem("orderId");
+          window.location.href="/";
+  
+      }).catch((error)=>{
+          console.log(error);
+      })
+  }
+ });
+
 }
 
 
 function logout(){
     localStorage.removeItem("token");
     localStorage.removeItem("email");
-    window.location.href="/user/main.html";
+    localStorage.removeItem("orderId");
+    axios.post("/user/logout", {}, { withCredentials: true })
+    .then(() => window.location.href = "/");
+
 }
 
 async function selectProducts(){
@@ -78,6 +149,7 @@ async function selectProducts(){
     document.getElementById("ordersSection").style.display="none";
     document.getElementById("mapSection").style.display="none";
     document.getElementById("chatSection").style.display="none";
+    document.getElementById("profileSection").style.display="none";
 
     const Products=await axios.get(`${backend_url}/user/getProducts`);
     const productsContainer=document.getElementById("productList");
@@ -124,7 +196,7 @@ async function addToCart(productId){
   }
 }
 
-
+let cartStore = null;
 async function getCart()
 {
   try{
@@ -134,9 +206,11 @@ async function getCart()
     document.getElementById("ordersSection").style.display="none";
     document.getElementById("mapSection").style.display="none";
     document.getElementById("chatSection").style.display="none";
+    document.getElementById("profileSection").style.display="none";
 
     const response=await axios.get(`${backend_url}/user/getCart`,{headers:{Authorization:token}});
     const cartItems=response.data.cartProducts;
+
    if(cartItems.length===0)
    {
     const cartContainer=document.getElementById("cartList");
@@ -145,6 +219,8 @@ async function getCart()
     totalPriceElement.innerText="Total Price: ₹0";
     return;
    }
+   cartStore = null;
+   cartStore=cartItems;
 
     const cartContainer=document.getElementById("cartList");
     cartContainer.innerHTML="";
@@ -198,6 +274,27 @@ async function checkout() {
   try {
     const token = localStorage.getItem("token");
 
+    if(!cartStore || cartStore.length===0)
+    {
+      alert("Your cart is empty!");
+      return;
+    }
+
+    const Products=await axios.get(`${backend_url}/user/getProducts`);
+    const ProductsIds=Products.data.map(p=>p._id.toString());
+
+    const cartProductsIds=cartStore.map(item=>{
+      return item.productId._id.toString();
+    });
+
+    const unavailableProducts=cartProductsIds.filter(id=>!ProductsIds.includes(id));
+    if(unavailableProducts.length>0)
+    {
+      alert("Some products not available");
+      return;
+    }
+
+
     const position = await new Promise((resolve, reject) => {
       navigator.geolocation.getCurrentPosition(resolve, reject);
     });
@@ -243,6 +340,7 @@ async function orders(){
     document.getElementById("ordersSection").style.display="block";
     document.getElementById("mapSection").style.display="none";
     document.getElementById("chatSection").style.display="none";
+    document.getElementById("profileSection").style.display="none";
 
     const token=localStorage.getItem("token");
     const response=await axios.get(`${backend_url}/user/getOrders`,{headers:{Authorization:token}});
@@ -321,6 +419,7 @@ function liveTracking()
   document.getElementById("ordersSection").style.display="none";
   document.getElementById("mapSection").style.display="block";
   document.getElementById("chatSection").style.display="none";
+  document.getElementById("profileSection").style.display="none";
   
     if (lastLocation) {
       initMap(lastLocation.lat, lastLocation.lng);
@@ -341,6 +440,7 @@ const sendBtn = document.getElementById("sendBtn");
     document.getElementById("productSection").style.display="none";
     document.getElementById("ordersSection").style.display="none";
     document.getElementById("mapSection").style.display="none";
+    document.getElementById("profileSection").style.display="none";
     const chat = document.getElementById("chatSection");
     chat.style.display = "flex";
     chat.style.flexDirection = "column";

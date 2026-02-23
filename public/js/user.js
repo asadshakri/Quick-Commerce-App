@@ -1,5 +1,15 @@
 const backend_url="http://localhost:7000";
 
+
+window.onload=function(){
+  if(localStorage.getItem("token"))
+  {
+    window.location.href="/user/shop";
+  }
+}
+
+
+
 function showLogin() {
     document.getElementById("signupForm").style.display = "none";
     document.getElementById("loginForm").style.display = "block";
@@ -20,9 +30,11 @@ function showLogin() {
     const name=event.target.name.value;
     const email=event.target.email.value;
     const password=event.target.passwd.value;
+    const phone=event.target.phone.value;
+    const address=event.target.address.value;
     const span=document.getElementById("message1");
     span.innerHTML="";
-    const userDetails={name,email,password};
+    const userDetails={name,email,password,phone,address};
     
     axios.post(`${backend_url}/user/signup`,userDetails).then((response)=>{
          
@@ -30,17 +42,11 @@ function showLogin() {
             alert(response.data.message);
 
     }).catch((error)=>{
-
-      if(error.response.status=="409")
-        {
+     
           const span=document.getElementById("message1");
-    
           span.innerHTML=`${error.response.data.message}`
           span.style.color="red";
-        }
-     else{
-           console.log(error);
-     }
+     
     })
  event.target.reset();
   }
@@ -52,11 +58,11 @@ function showLogin() {
     const userDetails={email,password};
     const span=document.getElementById("message2");
     span.innerHTML="";
-    axios.post(`${backend_url}/user/login`,userDetails).then((response)=>{
+    axios.post(`${backend_url}/user/login`,userDetails,{withCredentials: true}).then((response)=>{
       alert(response.data.message);
       localStorage.setItem("token",response.data.token);
       localStorage.setItem("email",email);
-      window.location.href="/shop/shop.html";
+      window.location.href="/user/shop";
 
     }).catch((error)=>{
       if(error.response.status=="404" || error.response.status=="401")

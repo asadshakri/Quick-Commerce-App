@@ -66,6 +66,59 @@
         
   </div>
 
+
+  <div  id="profileSection" style="display: none;">
+    <div class="d-flex flex-column align-items-center border-end" style="min-width: 200px; height: 100vh; padding-top: 20px;">
+        <button id="deleteUserBtn" class="btn btn-danger m-4">Delete Account</button>
+        <button id="changePasswordBtn" class="btn btn-warning m-4">Change Password</button>
+    </div>
+        <div id="updateProfile" style="display: block; flex-grow: 1; padding: 20px;">
+           
+             <form id="profileForm" class="p-4">
+                <h3>Update Profile</h3>
+                <br>
+                <div class="mb-3">
+                    <label for="name" class="form-label">Name</label>
+                    <input type="text" class="form-control" id="name" name="name" required>
+                </div>
+                <div class="mb-3">
+                    <label for="email" class="form-label">Email</label>
+                    <input type="email" class="form-control" id="email" name="email" required>
+                </div>
+                <div class="mb-3">
+                    <label for="phone" class="form-label">Phone</label>
+                    <input type="text" class="form-control" id="phone" name="phone" required>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" name="address" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="updateProfile">Update Profile</button>
+            </form>
+        </div>
+
+            
+            <div id="changePasswordSection" style="display: none; flex-grow: 1; padding: 20px;">
+              <form id="changePasswordForm" class="p-4">
+                  <h3>Change Password</h3>
+                  <br>
+                  <div class="mb-3">
+                      <label for="currentPassword" class="form-label">Current Password</label>
+                      <input type="password" class="form-control" id="currentPassword" name="currentPassword" required>
+                  </div>
+                  <div class="mb-3">
+                      <label for="newPassword" class="form-label">New Password</label>
+                      <input type="password" class="form-control" id="newPassword" name="newPassword" required>
+                  </div>
+                  <button type="submit" class="btn btn-primary">Change Password</button>
+              </form>
+            </div>
+          
+        </div>
+    </div>
+  </div>
+
+
   <div id="productSection" style="display: none;">
     
      <div id="productList" class="d-flex flex-wrap gap-3 p-4">

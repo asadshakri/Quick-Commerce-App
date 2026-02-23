@@ -12,6 +12,11 @@ router.delete("/deleteProduct/:productId",middleware.authenticate,adminControlle
 router.get("/getAllOrders",middleware.authenticate,adminController.getAllOrders);
 //router.put("/updateLocation/:orderId",middleware.authenticate,adminController.updateLocation);
 router.get("/getOrder/:orderId",middleware.authenticate,adminController.getOrder);
+router.get("/productPage",middleware.authenticate,adminController.productPage);
+router.post("/logout", (req, res) => {
+    res.clearCookie("token");
+    res.json({ message: "Logged out" });
+  });
 
 
 

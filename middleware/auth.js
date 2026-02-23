@@ -4,8 +4,16 @@ require('dotenv').config();
 
 const authenticate=async(req,res,next)=>{
     try{
-        const token=req.header("authorization");
-      
+        const token=req.header("authorization") || req.cookies.token;
+        console.log(token);
+   if(!token)
+   {
+    res.status(401).send(`<h1>Not authorized! Please login to access this page</h1>
+        <a href='http://localhost:7000/admin'>Login for Admin</a>
+        <br>
+        <a href='http://localhost:7000/'>Login for User</a>`);
+   }
+
         const user=jwt.verify(token,`${process.env.TOKEN}`);
       
         if(user.userId===process.env.ADMIN_ID)

@@ -21,6 +21,8 @@ const paymentRouter=require("./Routes/paymentRouter");
 require("./models/user")
 const adminRouter=require("./Routes/adminRouter");
 
+const cookieParser = require("cookie-parser");
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.static('public'));
 app.use(express.static(path.join(__dirname, "./view")));
@@ -45,12 +47,15 @@ app.use("/chat",chatListRouter);
 app.use("/",paymentRouter);
 
 
-app.get("/", (req, res) => {
-    res.redirect("/user/main.html");
+app.get("/",(req, res) => {
+    
+
+    res.sendFile(path.join(__dirname, "./View/user/main.html"));
   });
 
 app.get("/admin", (req, res) => {
-    res.redirect("/admin/admin.html");
+
+  res.sendFile(path.join(__dirname, "./View/admin/admin.html"));
   } );
 
 (async () => {

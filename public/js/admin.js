@@ -1,6 +1,11 @@
 const backendUrl="http://localhost:7000";
 
-
+window.onload=function(){
+  if(localStorage.getItem("token"))
+  {
+    window.location.href="/admin/productPage";
+  }
+}
 
 function loginAdmin(event){
     event.preventDefault();
@@ -9,13 +14,13 @@ function loginAdmin(event){
     const adminDetails={email,password};
     const span=document.getElementById("message");
     span.innerHTML="";
-    axios.post(`${backendUrl}/admin/login`,adminDetails).then((response)=>{
+    axios.post(`${backendUrl}/admin/login`,adminDetails,{withCredentials: true}).then((response)=>{
       alert(response.data.message);
       localStorage.setItem("adminEmail",response.data.email);
       localStorage.setItem("token",response.data.token);
-      window.location.href="/admin/adminProducts.html";
+      window.location.href = "/admin/productPage";
     }).catch((error)=>{
-      if(error.response.status=="404" || error.response.status=="401")
+      if(error.response && (error.response.status=="404" || error.response.status=="401"))
       {
          span.innerHTML=`${error.response.data.message}`
          span.style.color="red";
