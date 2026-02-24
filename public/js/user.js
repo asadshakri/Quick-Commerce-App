@@ -1,4 +1,4 @@
-const backend_url="http://localhost:7000";
+const backend_url="http://52.66.111.54";
 
 
 window.onload=function(){

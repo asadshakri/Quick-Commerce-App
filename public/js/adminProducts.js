@@ -1,6 +1,6 @@
 
 
-const backendUrl="http://localhost:7000";
+const backendUrl="http://52.66.111.54";
 
 
 const socket = io(backendUrl, {
