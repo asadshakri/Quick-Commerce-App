@@ -1,6 +1,6 @@
 Quick-Commerce Prototype – API Documentation
 
-Built a q-commerce prototype with JWT-based authentication and cart/order management. Payments are handled via Cashfree, with order placed only after successful payment. Simulated Delivery using web Socket is integrated to see live location of Delivery. Chat with Store functionality using web Socket is also implemented. Developed Admin Dashboard to add and manage products. This application is deployed on AWS EC2 instance using jenkins  
+Built a q-commerce prototype with JWT-based authentication and cart/order management. Payments are handled via Cashfree, with order placed only after successful payment. Simulated Delivery using Socket.IO is integrated to see live location of Delivery. Chat with Store functionality using Socket.IO is also implemented. Developed Admin Dashboard to add and manage products. This application is deployed on AWS EC2 instance using jenkins  
 tool.
 
 Tech Stack:-
