@@ -11,7 +11,7 @@ const uploadMedia = async (req, res) => {
       return res.status(400).json({ message: "File or room missing" });
     }
 
-    const key = `Dchat/${uuidv4()}-${file.originalname}`;
+    const key = `content/${uuidv4()}-${file.originalname}`;
 
     const upload = await s3.upload({
       Bucket: process.env.AWS_BUCKET_NAME,
