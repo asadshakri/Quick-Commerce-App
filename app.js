@@ -4,7 +4,7 @@ require('dotenv').config();
 const path=require('path');
 const port=process.env.PORT;
 const http=require("http");
-
+const cors=require("cors");
 const mongoose=require('mongoose');
 const socketIO=require("./socket.io");
 
@@ -22,6 +22,8 @@ require("./models/user")
 const adminRouter=require("./Routes/adminRouter");
 
 const cookieParser = require("cookie-parser");
+app.use(cors());
+
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.static('public'));
