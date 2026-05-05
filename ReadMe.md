@@ -1,44 +1,48 @@
-Quick-Commerce Prototype – API Documentation
+# Quick-Commerce Prototype – API Documentation
 
 Built a q-commerce prototype with JWT-based authentication and cart/order management. Payments are handled via Cashfree, with order placed only after successful payment. Simulated Delivery using Socket.IO is integrated to see live location of Delivery. Chat with Store functionality using Socket.IO is also implemented. Developed Admin Dashboard to add and manage products. This application is deployed on AWS EC2 instance using jenkins tool.
 
 Demo Video- https://www.loom.com/share/07755a0c9f61425c9e58abc0e67734fa
 
-Tech Stack:-
+## Tech Stack:-
 
 Backend \- Node.js (Express.js)  
 Frontend \- HTML, CSS, JavaScript  
 Database \- MongoDB (ODM- Mongoose)
 
-Steps run the application on local Machine-
+## Steps run the application on local Machine-
 
 * npm install   (Install all the dependencies from package.json file)  
 * Create .env file to store the environment variables.  
 * nodemon [app.js](http://app.js)
 
-API ENDPOINT
+## API ENDPOINT
 
-1. Admin Routes
+# 1. Admin Routes
 
-* POST /admin/login
+POST /admin/login
 
-Body                                                                       
+Body
+```json
 {  
 “email”: “[asadshakri3127@.com](mailto:asd@gmail.com)”  
 “Password”: “admin123”  
 }
+```
 
 Response  
+```json
 {  
     message: "Admin login successful",  
     token: “xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx”,  
     email: “asadshakri3127@gmail.com”,  
  }
+```
 
-* POST /admin/addProduct
+POST /admin/addProduct
 
 Body
-
+```json
 {  
    “name”: "Iphone 17",   
    “description”: "Smart Phone",   
@@ -46,11 +50,12 @@ Body
    “imageUrl”: “xxxxxxxxxxxxxxxxxxxxxxxx”
 
 }
+```
 
-* GET /admin/product/:productId
+GET /admin/product/:productId
 
 Response
-
+```json
 {  
     "\_id": "699c1cfb437375bf8f18c630",  
     "name": "Head Phone",  
@@ -59,11 +64,13 @@ Response
     "imageUrl": "https://unixindia.in/cdn/shop/files/01\_34af94b9-40d7-4956-805e-0cb7df907ef7.jpg?v=1747994450",  
     "\_\_v": 0  
 }
+```
 
-* PUT /admin/editProduct
+PUT /admin/editProduct
 
 Body
 
+```json
 {  
     "\_id": "699c1cfb437375bf8f18c630",  
     "name": "Head Phone",  
@@ -71,14 +78,15 @@ Body
     "description": "Electronics",  
     "imageUrl": "https://unixindia.in/cdn/shop/files/01\_34af94b9-40d7-4956-805e-0cb7df907ef7.jpg?v=1747994450",  
 }
+```
 
-* DELETE /admin/deleteProduct/:productId
+DELETE /admin/deleteProduct/:productId
 
-* GET /admin/getAllOrders
+GET /admin/getAllOrders
 
 Response
-
-\[  
+```json
+[  
     {  
         "user": {  
             "userId": "699870b965ab68b1bce8c790",  
@@ -109,10 +117,12 @@ Response
     },  
     {........................}  
 }
+```
 
-* GET /admin/getOrder/:orderId
+GET /admin/getOrder/:orderId
 
 Response  
+```json
 {  
     "deliveryLocation": {  
         "lat": 25.581375899009778,  
@@ -120,17 +130,19 @@ Response
     },  
     "\_id": "699d7e0373175a533719212a"  
 }
+```
 
-* POST /admin/logout
+POST /admin/logout
 
 
 
 
-2. Customer Routes
+### 2. Customer Routes
 
-* POST /user/signup
+POST /user/signup
 
-Body  
+Body 
+```json
 {  
     “address: "delhi",  
      “email”: "shakri@gmail.com".  
@@ -139,21 +151,26 @@ Body
     “phone”:  "123456748"
 
 }
+```
 
-* POST /user/login
+POST /user/login
 
-Body                                                                       
+Body
+```json
 {  
 “email”: “[asadshakri@.com](mailto:asd@gmail.com)”  
 “Password”: “xxxxxx”  
 }
+```
 
-Response  
+Response 
+```json
 {  
     message: "login successful",  
     token: “xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx”,  
     email: “asadshakri@gmail.com”,  
  }
+```
 
 * GET /user/getProducts
 
