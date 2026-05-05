@@ -1,4 +1,4 @@
-const backend_url="http://52.66.111.54";
+const backend_url="https://quick-commerce-gules.vercel.app";
 
 const token=localStorage.getItem("token");
 
