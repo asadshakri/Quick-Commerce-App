@@ -1,6 +1,6 @@
 
 
-const backendUrl="http://52.66.111.54";
+const backendUrl="https://quick-commerce-gules.vercel.app";
 
 
 const socket = io(backendUrl, {
