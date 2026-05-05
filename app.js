@@ -7,7 +7,7 @@ const http=require("http");
 const cors=require("cors");
 const mongoose=require('mongoose');
 const socketIO=require("./socket.io");
-
+// server
 const server=http.createServer(app);
 
 
