@@ -5,7 +5,7 @@ document.getElementById("renderBtn").addEventListener("click", async() => {
     try{
         const token=localStorage.getItem("token");
         const orderId=localStorage.getItem("orderId");
-      const response=await axios.post("http://52.66.111.54/pay",{orderId},{ headers:{ "Authorization": token } })
+      const response=await axios.post("https://quick-commerce-gules.vercel.app/pay",{orderId},{ headers:{ "Authorization": token } })
       const paymentSessionId=response.data.paymentSessionId;
        console.log(paymentSessionId);
     let checkoutOptions = {
@@ -21,12 +21,12 @@ catch(err)
 }
 });
 
-window.opener.postMessage("READY", "http://52.66.111.54");
+window.opener.postMessage("READY", "https://quick-commerce-gules.vercel.app");
 
 window.addEventListener("message", (event) => {
   console.log("Message received from:", event.origin);
 
-  if (event.origin === "http://52.66.111.54") {
+  if (event.origin === "https://quick-commerce-gules.vercel.app") {
     localStorage.setItem("token", event.data.token);
     localStorage.setItem("orderId", event.data.orderId);
    
