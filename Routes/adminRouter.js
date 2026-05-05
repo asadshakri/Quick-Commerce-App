@@ -2,7 +2,7 @@ const express=require('express');
 const router=express.Router();
 
 const middleware=require("../middleware/auth");
-const adminController=require("../controller/adminController");
+const adminController=require("../Controller/adminController");
 
 router.post("/login",adminController.loginAdmin);
 router.post("/addProduct",middleware.authenticate,adminController.addProduct);
