@@ -5,6 +5,7 @@ Built a q-commerce prototype with JWT-based authentication and cart/order manage
 ## 🎥 Demo 
 [https://www.loom.com/share/07755a0c9f61425c9e58abc0e67734fa](https://www.loom.com/share/07755a0c9f61425c9e58abc0e67734fa)
 
+
 ## 🚀 Features
 
 🔐 JWT-based authentication (Admin & User)
@@ -30,7 +31,10 @@ Database - MongoDB (ODM- Mongoose)
 
 ## ⚙️ Setup Instructions
 
-* npm install   (Install all the dependencies from package.json file)
+* Install all the dependencies from package.json file
+```
+npm install
+```
 * Create .env file to store the environment variables.
 ```
 PORT=
@@ -47,8 +51,10 @@ CASHFREE_API_KEY=
 CASHFREE_API_SECRET=
 BREVO_API_KEY=
 ```
-  
-* nodemon app.js
+* Run the application
+```
+node app.js
+```
 
 ## 📡 API Endpoints
 
